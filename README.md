@@ -207,8 +207,3 @@ Add the subdomain hubot should connect to. If you web URL looks like
     % heroku config:add HUBOT_CAMPFIRE_ACCOUNT="mysubdomain"
 
 [hubot-adapters]: https://github.com/github/hubot/blob/master/docs/adapters.md
-
-## Restart the bot
-
-You may want to get comfortable with `heroku logs` and `heroku restart` if
-you're having issues.
