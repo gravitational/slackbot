@@ -1,7 +1,4 @@
 [
   "hubot-pager-me",
-  "hubot-diagnostics",
-  "hubot-help",
-  "hubot-maps",
-  "hubot-rules"
+  "hubot-help"
 ]
