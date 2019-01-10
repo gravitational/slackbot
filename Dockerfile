@@ -2,7 +2,7 @@ FROM alpine
 
 RUN apk update
 
-RUN apk add nodejs npm
+RUN apk add nodejs npm git
 
 ADD . /bot
 
