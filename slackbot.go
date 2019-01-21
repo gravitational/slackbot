@@ -25,6 +25,14 @@ func main() {
 	if PDSupportSchedule == "" {
 		panic("PAGERDUTY_SUPPORT_SCHEDULE ENV variable must be set")
 	}
+	PDSupportService := os.Getenv("PAGERDUTY_SUPPORT_SERVICE")
+	if PDSupportSchedule == "" {
+		panic("PAGERDUTY_SUPPORT_SERVICE ENV variable must be set")
+	}
+	PDCustomerName := os.Getenv("PAGERDUTY_CUSTOMER_NAME")
+	if PDCustomerName == "" {
+		panic("PAGERDUTY_CUSTOMER_NAME ENV variable must be set")
+	}
 
 	slackPDDirectoryJSON := os.Getenv("SLACK_PAGERDUTY_DIRECTORY")
 	if slackPDDirectoryJSON == "" {
@@ -35,20 +43,23 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	PDFromEmail := os.Getenv("PAGERDUTY_FROM_EMAIL")
+	if slackPDDirectoryJSON == "" {
+		panic("PAGERDUTY_FROM_EMAIL ENV variable must be set")
+	}
 	//PDServiceApiKey	:= os.Getenv("PAGERDUTY_SERVICE_API_KEY")
-	//PDFromEmail		:= os.Getenv("PAGERDUTY_FROM_EMAIL")
 
 	bot := slacker.NewClient(slackToken)
-	var opts pagerduty.ListEscalationPoliciesOptions
+
 	bot.Init(func() {
 		log.Println("Connected!")
 		client := pagerduty.NewClient(PDApiKey)
-		if eps, err := client.ListEscalationPolicies(opts); err != nil {
+		var opts pagerduty.GetScheduleOptions
+		if schedule, err := client.GetSchedule(PDSupportSchedule, opts); err != nil {
 			panic(err)
 		} else {
-			for _, p := range eps.EscalationPolicies {
-				log.Println(p.Name)
-			}
+			log.Println("Enable schedule is \"" + schedule.Name +
+				"\" with ID: " + PDSupportSchedule)
 		}
 	})
 
@@ -58,8 +69,38 @@ func main() {
 
 	bot.Command("emergency <msg>", "Open an EMERGENCY incident to Gravitational Customer Support",
 		func(request slacker.Request, response slacker.ResponseWriter) {
-			msg := request.Param("msg")
-			response.Reply(msg)
+			client := pagerduty.NewClient(PDApiKey)
+			var scheduleOpts pagerduty.GetScheduleOptions
+			if schedule, err := client.GetSchedule(PDSupportSchedule, scheduleOpts); err != nil {
+				panic(err)
+			} else {
+				log.Println("Opening incident on schedule \"" + schedule.Name +
+					"\"/" + PDSupportSchedule)
+			}
+
+			// TODO: NOT WORKING
+			var newIncident pagerduty.CreateIncidentOptions
+			newIncident["Type"] = "incident"
+			newIncident["Title"] = "Incident opened via Slack by " + PDCustomerName
+
+			var newIncidentBody pagerduty.APIDetails
+			newIncidentBody["Type"] = "incident_body"
+			newIncidentBody["Details"] = request.Param("msg")
+
+			newIncidentService := pagerduty.APIReference{
+				"Type": "service_reference",
+				"ID":   PDSupportService,
+			}
+
+			var createIncidentOpts *pagerduty.CreateIncident
+			createIncidentOpts["Incident"] = newIncident
+
+			if incident, err := client.CreateIncident(PDFromEmail, createIncidentOpts); err != nil {
+				panic(err)
+			} else {
+				log.Println("Incident created successfully" + incident.IncidentKey)
+				response.Reply("Incident created successfully" + incident.IncidentKey)
+			}
 		})
 
 	bot.DefaultCommand(func(request slacker.Request, response slacker.ResponseWriter) {
@@ -81,7 +122,7 @@ func main() {
 	})
 
 	bot.DefaultEvent(func(event interface{}) {
-		log.Println(event)
+		//log.Println(event)
 	})
 
 	bot.Help("help", slacker.WithHandler(func(request slacker.Request, response slacker.ResponseWriter) {
