@@ -16,7 +16,7 @@ type Config struct {
 
 // FromEnv TODO
 func (c *Config) FromEnv() error {
-	c.CustomerName = os.Getenv("PAGERDUTY_CUSTOMER_NAME")
+	c.CustomerName = os.Getenv("CUSTOMER_NAME")
 	if c.CustomerName == "" {
 		log.Fatal("CUSTOMER_NAME ENV variable must be set")
 	}
