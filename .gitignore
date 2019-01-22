@@ -5,3 +5,4 @@ package-lock.json
 *_bot.sh
 *.env
 *.private
+vendor
