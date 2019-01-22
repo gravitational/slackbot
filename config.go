@@ -18,7 +18,7 @@ type Config struct {
 func (c *Config) FromEnv() error {
 	c.CustomerName = os.Getenv("PAGERDUTY_CUSTOMER_NAME")
 	if c.CustomerName == "" {
-		log.Fatal("PAGERDUTY_CUSTOMER_NAME ENV variable must be set")
+		log.Fatal("CUSTOMER_NAME ENV variable must be set")
 	}
 
 	JSONDirectory := os.Getenv("SLACK_PAGERDUTY_DIRECTORY")
@@ -44,13 +44,18 @@ func (c *Config) FromEnv() error {
 }
 
 type _SlackConfig struct {
-	Token string
+	Token       string
+	BotUsername string
 }
 
 func (c *_SlackConfig) _fromEnv() error {
 	c.Token = os.Getenv("SLACK_TOKEN")
 	if c.Token == "" {
 		log.Fatal("SLACK_TOKEN ENV variable must be set")
+	}
+	c.BotUsername = os.Getenv("SLACK_BOT_USERNAME")
+	if c.BotUsername == "" {
+		log.Fatal("SLACK_BOT_USERNAME ENV variable must be set")
 	}
 
 	return nil
