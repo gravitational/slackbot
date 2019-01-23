@@ -53,7 +53,7 @@ Once you have your Bot tested and working, we suggest you running it in
 Kubernetes in production.
 In order to do so you can use the Deployment we offer as an example:
 
-    kubectl apply -f slackbot_deployment.yml
+    kubectl apply -f slackbot_deploy.yml
 
 
 ## TODO
