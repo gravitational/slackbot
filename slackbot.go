@@ -9,7 +9,7 @@ import (
 )
 
 // Init TODO
-func Init() {
+func Init(config *Config) {
 	log.Println("Connected!")
 	client := pagerduty.NewClient(config.PagerDuty.APIKey)
 	var opts pagerduty.GetScheduleOptions
@@ -26,7 +26,7 @@ func Err(err string) {
 }
 
 // Emergency TODO
-func Emergency(request slacker.Request, response slacker.ResponseWriter) {
+func Emergency(request slacker.Request, response slacker.ResponseWriter, config *Config) {
 	client := pagerduty.NewClient(config.PagerDuty.APIKey)
 	var scheduleOpts pagerduty.GetScheduleOptions
 	if schedule, err := client.GetSchedule(config.PagerDuty.Schedule, scheduleOpts); err != nil {
@@ -73,7 +73,7 @@ func Emergency(request slacker.Request, response slacker.ResponseWriter) {
 }
 
 // Default TODO
-func Default(request slacker.Request, response slacker.ResponseWriter) {
+func Default(request slacker.Request, response slacker.ResponseWriter, config *Config) {
 	client := pagerduty.NewClient(config.PagerDuty.APIKey)
 	var opts pagerduty.ListOnCallUsersOptions
 	opts.Since = time.Now().Format(time.RFC3339)
