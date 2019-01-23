@@ -2,5 +2,5 @@ version: '3'
 services:
     bot:
         build: .
-        image: slackbot:dev
+        image: slackbot
         env_file: .env
