@@ -63,12 +63,13 @@ func Emergency(request slacker.Request, response slacker.ResponseWriter, config 
 		log.Println(errText)
 		response.Reply(errText)
 	} else {
+		incidentURL := config.PagerDuty.Link + "/incidents/" + incident.Id
 		log.Println("Incident created by " + config.CustomerName +
 			" via @" + config.Slack.BotUsername +
-			" > https://gravitational.pagerduty.com/incidents/" + incident.Id)
+			" > " + incidentURL)
 		response.Reply("Incident created successfully, " +
-			"please refer to incident " +
-			"https://gravitational.pagerduty.com/incidents/" + incident.Id)
+			"please refer to incident " + incidentURL)
+
 	}
 }
 
@@ -99,7 +100,7 @@ func help(resp slacker.ResponseWriter, c *Config) {
 > *Gravity SlackBot - HELP*
 >
 > _@` + c.Slack.BotUsername + ` help_ - Prints the help message (if the word help is anywhere in the sentence)
-> _@` + c.Slack.BotUsername + ` open emergency ` + "`<msg>`" + `_ - Open an EMERGENCY incident to Gravitational Customer Support
+> _@` + c.Slack.BotUsername + ` open emergency ` + "`<msg>`" + `_ - Open an EMERGENCY incident to Customer Support
 > _@` + c.Slack.BotUsername + ` <anything else>_ - Any other message that will be sent directly to the Bot or mentioning the 
 >                                             Bot name in other channels, will result in a ping (mention) to the current 
 >                                             person on call.

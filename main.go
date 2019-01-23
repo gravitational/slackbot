@@ -30,7 +30,7 @@ func main() {
 
 	// function tied to sentences sent to the Bot and starting with "open emergency" followed by some text
 	bot.Command("open emergency <msg>",
-		"Open an EMERGENCY incident to Gravitational Customer Support",
+		"Open an EMERGENCY incident to Customer Support",
 		func(request slacker.Request, response slacker.ResponseWriter) {
 			Emergency(request, response, &config)
 		})

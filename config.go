@@ -16,26 +16,20 @@ type Config struct {
 
 // FromEnv TODO
 func (c *Config) FromEnv() error {
-	c.CustomerName = os.Getenv("CUSTOMER_NAME")
-	if c.CustomerName == "" {
-		log.Fatal("CUSTOMER_NAME ENV variable must be set")
-	}
+	c.CustomerName = _GetVarFromEnv("CUSTOMER_NAME")
 
-	JSONDirectory := os.Getenv("SLACK_PAGERDUTY_DIRECTORY")
-	if JSONDirectory == "" {
-		log.Fatal("SLACK_PAGERDUTY_DIRECTORY ENV variable must be set")
-	}
+	JSONDirectory := _GetVarFromEnv("SLACK_PAGERDUTY_DIRECTORY")
 	err := json.Unmarshal([]byte(JSONDirectory), &c.Directory)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	err = c.Slack._fromEnv()
+	err = c.Slack._FromEnv()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	err = c.PagerDuty._fromEnv()
+	err = c.PagerDuty._FromEnv()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -48,43 +42,40 @@ type _SlackConfig struct {
 	BotUsername string
 }
 
-func (c *_SlackConfig) _fromEnv() error {
-	c.Token = os.Getenv("SLACK_TOKEN")
-	if c.Token == "" {
-		log.Fatal("SLACK_TOKEN ENV variable must be set")
-	}
-	c.BotUsername = os.Getenv("SLACK_BOT_USERNAME")
-	if c.BotUsername == "" {
-		log.Fatal("SLACK_BOT_USERNAME ENV variable must be set")
-	}
+func (c *_SlackConfig) _FromEnv() error {
+	c.Token = _GetVarFromEnv("SLACK_TOKEN")
+
+	c.BotUsername = _GetVarFromEnv("SLACK_BOT_USERNAME")
 
 	return nil
 }
 
 type _PagerDutyConfig struct {
+	Link      string
 	APIKey    string
 	Schedule  string
 	Service   string
 	FromEmail string
 }
 
-func (c *_PagerDutyConfig) _fromEnv() error {
-	c.APIKey = os.Getenv("PAGERDUTY_API_KEY")
-	if c.APIKey == "" {
-		log.Fatal("PAGERDUTY_API_KEY ENV variable must be set")
-	}
-	c.Schedule = os.Getenv("PAGERDUTY_SUPPORT_SCHEDULE")
-	if c.Schedule == "" {
-		log.Fatal("PAGERDUTY_SUPPORT_SCHEDULE ENV variable must be set")
-	}
-	c.Service = os.Getenv("PAGERDUTY_SUPPORT_SERVICE")
-	if c.Service == "" {
-		log.Fatal("PAGERDUTY_SUPPORT_SERVICE ENV variable must be set")
-	}
-	c.FromEmail = os.Getenv("PAGERDUTY_FROM_EMAIL")
-	if c.FromEmail == "" {
-		log.Fatal("PAGERDUTY_FROM_EMAIL ENV variable must be set")
-	}
+func (c *_PagerDutyConfig) _FromEnv() error {
+	c.Link = _GetVarFromEnv("PAGERDUTY_LINK")
+
+	c.APIKey = _GetVarFromEnv("PAGERDUTY_API_KEY")
+
+	c.Schedule = _GetVarFromEnv("PAGERDUTY_SUPPORT_SCHEDULE")
+
+	c.Service = _GetVarFromEnv("PAGERDUTY_SUPPORT_SERVICE")
+
+	c.FromEmail = _GetVarFromEnv("PAGERDUTY_FROM_EMAIL")
 
 	return nil
+}
+
+func _GetVarFromEnv(varName string) string {
+	value := os.Getenv(varName)
+	if value == "" {
+		log.Fatal(varName + " ENV variable must be set")
+	}
+	return value
 }
