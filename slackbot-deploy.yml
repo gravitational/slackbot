@@ -1,0 +1,102 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: slackbot
+  labels:
+    app: slackbot
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: customer1bot
+  namespace: slackbot
+  labels:
+    bot: customer1bot
+    app: slackbot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      bot: customer1bot
+  template:
+    metadata:
+      labels:
+        bot: customer1bot
+        app: slackbot
+    spec:
+      containers:
+        - name: bot
+          image: slackbot
+          env:
+            - name: CUSTOMER_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: customer1bot-config
+                  key: CUSTOMER_NAME
+            - name: SLACK_PAGERDUTY_DIRECTORY
+              valueFrom:
+                secretKeyRef:
+                  name: customer1bot-config
+                  key: PAGERDUTY_DIRECTORY
+            - name: SLACK_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: customer1bot-config
+                  key: SLACK_TOKEN
+            - name: SLACK_BOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: customer1bot-config
+                  key: SLACK_BOT_USERNAME
+            - name: PAGERDUTY_LINK
+              valueFrom:
+                secretKeyRef:
+                  name: customer1bot-config
+                  key: PAGERDUTY_LINK
+            - name: PAGERDUTY_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: customer1bot-config
+                  key: PAGERDUTY_API_KEY
+            - name: PAGERDUTY_FROM_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: customer1bot-config
+                  key: PAGERDUTY_FROM_EMAIL
+            - name: PAGERDUTY_SERVICE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: customer1bot-config
+                  key: PAGERDUTY_SERVICE_API_KEY
+            - name: PAGERDUTY_SUPPORT_SCHEDULE
+              valueFrom:
+                secretKeyRef:
+                  name: customer1bot-config
+                  key: PAGERDUTY_SUPPORT_SCHEDULE
+            - name: PAGERDUTY_SUPPORT_SERVICE
+              valueFrom:
+                secretKeyRef:
+                  name: customer1bot-config
+                  key: PAGERDUTY_SUPPORT_SERVICE
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: customer1bot-config
+  namespace: slackbot
+  labels:
+    bot: customer1bot
+    app: slackbot
+type: Opaque
+stringData:
+  CUSTOMER_NAME: "Awesome Customer Brand"
+  SLACK_PAGERDUTY_DIRECTORY: '{ "oncalluser1@example.email" : "slack_username1", "oncalluser2@example.email" : "slack_username2" }'
+  SLACK_TOKEN: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+  SLACK_BOT_USERNAME: "customersupportbot"
+  PAGERDUTY_LINK: "https://mycompany.pagerduty.com"
+  PAGERDUTY_API_KEY: "0123456789abcdef0123456789abcdef"
+  PAGERDUTY_FROM_EMAIL: "customersupport@example.email"
+  PAGERDUTY_SERVICE_API_KEY: "0123456789abcdef0123456789abcdef"
+  PAGERDUTY_SUPPORT_SCHEDULE: "P000001"
+  PAGERDUTY_SUPPORT_SERVICE: "P000001"
