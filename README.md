@@ -2,11 +2,13 @@
 
 ## Intro
 
-`slackbot` is an automated Bot for Slack that connects to PagerDuty to provide some basic self-service Support features to Customers.
+`slackbot` is an automated Bot for Slack that connects to PagerDuty to provide 
+some basic self-service and oncall Support features to Customers.
 
 ## Settings
 
 In order to do so a few basic requirements needs to be setup and configured via environment variables:
+
 | Variable Name | Description | Example |
 |---------------|-------------|---------|
 | CUSTOMER_NAME | Arbitrary name used in messages and needed to identify the customer requesting support | "Awesome Customer Brand" |
@@ -50,7 +52,7 @@ and specify them through the appropriate settings.
 ### Through a Deployment
 
 Once you have your Bot tested and working, we suggest you running it in 
-Kubernetes in production.
+Kubernetes in production.<br>
 In order to do so you can use the Deployment we offer as an example:
 
     kubectl apply -f slackbot_deploy.yml
