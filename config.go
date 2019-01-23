@@ -10,26 +10,26 @@ import (
 type Config struct {
 	CustomerName string
 	Directory    map[string]interface{}
-	Slack        _SlackConfig
-	PagerDuty    _PagerDutyConfig
+	Slack        slackConfig
+	PagerDuty    pagerDutyConfig
 }
 
 // FromEnv TODO
 func (c *Config) FromEnv() error {
-	c.CustomerName = _GetVarFromEnv("CUSTOMER_NAME")
+	c.CustomerName = getVarFromEnv("CUSTOMER_NAME")
 
-	JSONDirectory := _GetVarFromEnv("SLACK_PAGERDUTY_DIRECTORY")
+	JSONDirectory := getVarFromEnv("SLACK_PAGERDUTY_DIRECTORY")
 	err := json.Unmarshal([]byte(JSONDirectory), &c.Directory)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	err = c.Slack._FromEnv()
+	err = c.Slack.fromEnv()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	err = c.PagerDuty._FromEnv()
+	err = c.PagerDuty.fromEnv()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -37,20 +37,20 @@ func (c *Config) FromEnv() error {
 	return nil
 }
 
-type _SlackConfig struct {
+type slackConfig struct {
 	Token       string
 	BotUsername string
 }
 
-func (c *_SlackConfig) _FromEnv() error {
-	c.Token = _GetVarFromEnv("SLACK_TOKEN")
+func (c *slackConfig) fromEnv() error {
+	c.Token = getVarFromEnv("SLACK_TOKEN")
 
-	c.BotUsername = _GetVarFromEnv("SLACK_BOT_USERNAME")
+	c.BotUsername = getVarFromEnv("SLACK_BOT_USERNAME")
 
 	return nil
 }
 
-type _PagerDutyConfig struct {
+type pagerDutyConfig struct {
 	Link      string
 	APIKey    string
 	Schedule  string
@@ -58,21 +58,21 @@ type _PagerDutyConfig struct {
 	FromEmail string
 }
 
-func (c *_PagerDutyConfig) _FromEnv() error {
-	c.Link = _GetVarFromEnv("PAGERDUTY_LINK")
+func (c *pagerDutyConfig) fromEnv() error {
+	c.Link = getVarFromEnv("PAGERDUTY_LINK")
 
-	c.APIKey = _GetVarFromEnv("PAGERDUTY_API_KEY")
+	c.APIKey = getVarFromEnv("PAGERDUTY_API_KEY")
 
-	c.Schedule = _GetVarFromEnv("PAGERDUTY_SUPPORT_SCHEDULE")
+	c.Schedule = getVarFromEnv("PAGERDUTY_SUPPORT_SCHEDULE")
 
-	c.Service = _GetVarFromEnv("PAGERDUTY_SUPPORT_SERVICE")
+	c.Service = getVarFromEnv("PAGERDUTY_SUPPORT_SERVICE")
 
-	c.FromEmail = _GetVarFromEnv("PAGERDUTY_FROM_EMAIL")
+	c.FromEmail = getVarFromEnv("PAGERDUTY_FROM_EMAIL")
 
 	return nil
 }
 
-func _GetVarFromEnv(varName string) string {
+func getVarFromEnv(varName string) string {
 	value := os.Getenv(varName)
 	if value == "" {
 		log.Fatal(varName + " ENV variable must be set")
