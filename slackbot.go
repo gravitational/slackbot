@@ -97,7 +97,7 @@ func Default(request slacker.Request, response slacker.ResponseWriter, config *C
 
 func help(resp slacker.ResponseWriter, c *Config) {
 	help_text := `
-> *Gravity SlackBot - HELP*
+> *SlackBot - HELP*
 >
 > _@` + c.Slack.BotUsername + ` help_ - Prints the help message (if the word help is anywhere in the sentence)
 > _@` + c.Slack.BotUsername + ` open emergency ` + "`<msg>`" + `_ - Open an EMERGENCY incident to Customer Support
