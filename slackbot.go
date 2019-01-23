@@ -94,8 +94,8 @@ func Emergency(request slacker.Request, response slacker.ResponseWriter, config 
 func Default(request slacker.Request, response slacker.ResponseWriter, config *Config) {
 	client := pagerduty.NewClient(config.PagerDuty.APIKey)
 	var opts pagerduty.ListOnCallUsersOptions
-	opts.Since = time.Now().Format(time.RFC3339)
-	opts.Until = time.Now().Add(time.Minute * 1).Format(time.RFC3339)
+	opts.Since = time.Now().UTC().Format(time.RFC3339)
+	opts.Until = time.Now().UTC().Add(time.Minute * 1).Format(time.RFC3339)
 	if onCallUserList, err := client.ListOnCallUsers(config.PagerDuty.Schedule, opts); err != nil {
 		log.Fatal(err)
 	} else {
