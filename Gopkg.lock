@@ -26,6 +26,14 @@
   version = "v1.4.0"
 
 [[projects]]
+  digest = "1:adec6c13b942561150e8fbecffd9e4c342ccbac59385bd0ddf69d9a6d0699f22"
+  name = "github.com/gravitational/logrus"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "dcdb95d728dbb6fe4b9fbe6b3b9d1fb268e68036"
+  version = "1.0.6"
+
+[[projects]]
   branch = "master"
   digest = "1:7711bc85fa91b919713feda232ffe0bd4ebb0e8426b9c0de6c6f476e0eb9b7c2"
   name = "github.com/nlopes/slack"
@@ -68,11 +76,31 @@
   pruneopts = "UT"
   revision = "3ebf5c3cb940956eba4e95e001e76b16c0e9bfab"
 
+[[projects]]
+  branch = "master"
+  digest = "1:38f553aff0273ad6f367cb0a0f8b6eecbaef8dc6cb8b50e57b6a81c1d5b1e332"
+  name = "golang.org/x/crypto"
+  packages = ["ssh/terminal"]
+  pruneopts = "UT"
+  revision = "057139ce5d2bdbe6fe73c53679e24e9cf007f637"
+
+[[projects]]
+  branch = "master"
+  digest = "1:bb644db32f5bc1e327a0f748ec871edc4dc46f19b4fbbc15bfd95b1460646537"
+  name = "golang.org/x/sys"
+  packages = [
+    "unix",
+    "windows",
+  ]
+  pruneopts = "UT"
+  revision = "c6b37f3e92850b723493d63fd35aad34e19e048d"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
     "github.com/PagerDuty/go-pagerduty",
+    "github.com/gravitational/logrus",
     "github.com/shomali11/slacker",
   ]
   solver-name = "gps-cdcl"

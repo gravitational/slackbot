@@ -17,8 +17,9 @@ limitations under the License.
 package main
 
 import (
-	"log"
 	"time"
+
+	log "github.com/gravitational/logrus"
 
 	pagerduty "github.com/PagerDuty/go-pagerduty"
 	"github.com/shomali11/slacker"

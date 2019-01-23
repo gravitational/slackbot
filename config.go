@@ -18,8 +18,9 @@ package main
 
 import (
 	"encoding/json"
-	"log"
 	"os"
+
+	log "github.com/gravitational/logrus"
 )
 
 // Config TODO

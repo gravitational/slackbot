@@ -17,9 +17,9 @@ limitations under the License.
 package main
 
 import (
-	"log"
-
 	"context"
+
+	log "github.com/gravitational/logrus"
 
 	"github.com/shomali11/slacker"
 )
