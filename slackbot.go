@@ -101,7 +101,7 @@ func Default(request slacker.Request, response slacker.ResponseWriter, config *C
 	} else {
 		for _, p := range onCallUserList {
 			onCallSlackUsername := config.Directory[p.Email].(string)
-			responseText := "@" + onCallSlackUsername + " I think that " +
+			responseText := "<@" + onCallSlackUsername + "> I think that " +
 				config.CustomerName + " may need some help ASAP! " +
 				":point_up: :fire: :helmet_with_white_cross:"
 			log.Println(config.CustomerName + " requested help via @" +
