@@ -32,11 +32,21 @@ type Config struct {
 	PagerDuty    pagerDutyConfig
 }
 
+const varCustomerName = "CUSTOMER_NAME"
+const varJSONDirectory = "SLACK_PAGERDUTY_DIRECTORY"
+const varToken = "SLACK_TOKEN"
+const varBotUsername = "SLACK_BOT_USERNAME"
+const varLink = "PAGERDUTY_LINK"
+const varAPIKey = "PAGERDUTY_API_KEY"
+const varSchedule = "PAGERDUTY_SUPPORT_SCHEDULE"
+const varService = "PAGERDUTY_SUPPORT_SERVICE"
+const varFromEmail = "PAGERDUTY_FROM_EMAIL"
+
 // FromEnv gathers configuration from the Environment variables and merge them into the Config structure
 func (c *Config) FromEnv() error {
-	c.CustomerName = getVarFromEnv("CUSTOMER_NAME")
+	c.CustomerName = getVarFromEnv(varCustomerName)
 
-	JSONDirectory := getVarFromEnv("SLACK_PAGERDUTY_DIRECTORY")
+	JSONDirectory := getVarFromEnv(varJSONDirectory)
 	err := json.Unmarshal([]byte(JSONDirectory), &c.Directory)
 	if err != nil {
 		trace.Wrap(err)
