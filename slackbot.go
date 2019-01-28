@@ -27,7 +27,7 @@ import (
 	"github.com/shomali11/slacker"
 )
 
-// Init TODO
+// Init is called upon Bot creation (first startup)
 func Init(config *Config) {
 	log.Println("Connected!")
 	client := pagerduty.NewClient(config.PagerDuty.APIKey)
@@ -39,12 +39,12 @@ func Init(config *Config) {
 	}
 }
 
-// Err TODO
+// Err function is used to handle all Error reported by the Bot
 func Err(err string) {
 	fmt.Println(err)
 }
 
-// Emergency TODO
+// Emergency is used to open Emergency Incidents on PagerDuty
 func Emergency(request slacker.Request, response slacker.ResponseWriter, config *Config) {
 	client := pagerduty.NewClient(config.PagerDuty.APIKey)
 	var scheduleOpts pagerduty.GetScheduleOptions
@@ -92,7 +92,7 @@ func Emergency(request slacker.Request, response slacker.ResponseWriter, config 
 	}
 }
 
-// Default TODO
+// Default function handles all messages that won't match the other Commands
 func Default(request slacker.Request, response slacker.ResponseWriter, config *Config) {
 	client := pagerduty.NewClient(config.PagerDuty.APIKey)
 	var opts pagerduty.ListOnCallUsersOptions
@@ -114,6 +114,7 @@ func Default(request slacker.Request, response slacker.ResponseWriter, config *C
 	}
 }
 
+// help is used to print the Help message text
 func help(resp slacker.ResponseWriter, c *Config) {
 	help_text := `
 > *SlackBot - HELP*

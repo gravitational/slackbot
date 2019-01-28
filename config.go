@@ -24,7 +24,7 @@ import (
 	"github.com/gravitational/trace"
 )
 
-// Config TODO
+// Config is the configuration structure used everywhere in the code to pass settings and configuration
 type Config struct {
 	CustomerName string
 	Directory    map[string]interface{}
@@ -32,7 +32,7 @@ type Config struct {
 	PagerDuty    pagerDutyConfig
 }
 
-// FromEnv TODO
+// FromEnv gathers configuration from the Environment variables and merge them into the Config structure
 func (c *Config) FromEnv() error {
 	c.CustomerName = getVarFromEnv("CUSTOMER_NAME")
 
@@ -60,6 +60,7 @@ type slackConfig struct {
 	BotUsername string
 }
 
+// fromEnv handles the Slack part of the configuration, fetching values from Env variables
 func (c *slackConfig) fromEnv() error {
 	c.Token = getVarFromEnv("SLACK_TOKEN")
 
@@ -68,6 +69,7 @@ func (c *slackConfig) fromEnv() error {
 	return nil
 }
 
+// pagerDutyConfig struct is a PagerDuty config
 type pagerDutyConfig struct {
 	Link      string
 	APIKey    string
@@ -76,6 +78,7 @@ type pagerDutyConfig struct {
 	FromEmail string
 }
 
+// fromEnv handles the PagerDuty part of the configuration, fetching values from Env variables
 func (c *pagerDutyConfig) fromEnv() error {
 	c.Link = getVarFromEnv("PAGERDUTY_LINK")
 
@@ -90,6 +93,7 @@ func (c *pagerDutyConfig) fromEnv() error {
 	return nil
 }
 
+// getVarFromEnv is a wrapper function that just gets variable from the Env and return an error if no value is passed
 func getVarFromEnv(varName string) string {
 	value := os.Getenv(varName)
 	if value == "" {
