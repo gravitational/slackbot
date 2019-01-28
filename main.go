@@ -18,8 +18,7 @@ package main
 
 import (
 	"context"
-
-	log "github.com/gravitational/logrus"
+	"fmt"
 
 	"github.com/shomali11/slacker"
 )
@@ -28,7 +27,7 @@ func main() {
 	var config Config
 	err := config.FromEnv()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err.Error())
 	}
 
 	bot := slacker.NewClient(config.Slack.Token)
@@ -75,6 +74,6 @@ func main() {
 
 	err = bot.Listen(ctx)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err.Error())
 	}
 }

@@ -21,6 +21,7 @@ import (
 	"os"
 
 	log "github.com/gravitational/logrus"
+	"github.com/gravitational/trace"
 )
 
 // Config TODO
@@ -38,17 +39,17 @@ func (c *Config) FromEnv() error {
 	JSONDirectory := getVarFromEnv("SLACK_PAGERDUTY_DIRECTORY")
 	err := json.Unmarshal([]byte(JSONDirectory), &c.Directory)
 	if err != nil {
-		log.Fatal(err)
+		trace.Wrap(err)
 	}
 
 	err = c.Slack.fromEnv()
 	if err != nil {
-		log.Fatal(err)
+		trace.Wrap(err)
 	}
 
 	err = c.PagerDuty.fromEnv()
 	if err != nil {
-		log.Fatal(err)
+		trace.Wrap(err)
 	}
 
 	return nil

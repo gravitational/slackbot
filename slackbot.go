@@ -17,9 +17,11 @@ limitations under the License.
 package main
 
 import (
+	"fmt"
 	"time"
 
 	log "github.com/gravitational/logrus"
+	"github.com/gravitational/trace"
 
 	pagerduty "github.com/PagerDuty/go-pagerduty"
 	"github.com/shomali11/slacker"
@@ -31,7 +33,7 @@ func Init(config *Config) {
 	client := pagerduty.NewClient(config.PagerDuty.APIKey)
 	var opts pagerduty.GetScheduleOptions
 	if schedule, err := client.GetSchedule(config.PagerDuty.Schedule, opts); err != nil {
-		log.Fatal(err)
+		trace.Wrap(err)
 	} else {
 		log.Println("Configured schedule is \"" + schedule.Name + "\" with ID: " + config.PagerDuty.Schedule)
 	}
@@ -39,7 +41,7 @@ func Init(config *Config) {
 
 // Err TODO
 func Err(err string) {
-	log.Println(err)
+	fmt.Println(err)
 }
 
 // Emergency TODO
@@ -47,7 +49,7 @@ func Emergency(request slacker.Request, response slacker.ResponseWriter, config 
 	client := pagerduty.NewClient(config.PagerDuty.APIKey)
 	var scheduleOpts pagerduty.GetScheduleOptions
 	if schedule, err := client.GetSchedule(config.PagerDuty.Schedule, scheduleOpts); err != nil {
-		log.Fatal(err)
+		trace.Wrap(err)
 	} else {
 		log.Println("Opening incident on schedule \"" + schedule.Name +
 			"\"/" + config.PagerDuty.Schedule)
@@ -77,7 +79,7 @@ func Emergency(request slacker.Request, response slacker.ResponseWriter, config 
 
 	if incident, err := client.CreateIncident(config.PagerDuty.FromEmail, &createIncidentOpts); err != nil {
 		errText := "There was an error while creating a new incident created, please try again and report the following error" + err.Error()
-		log.Println(errText)
+		fmt.Println(errText)
 		response.Reply(errText)
 	} else {
 		incidentURL := config.PagerDuty.Link + "/incidents/" + incident.Id
@@ -97,7 +99,7 @@ func Default(request slacker.Request, response slacker.ResponseWriter, config *C
 	opts.Since = time.Now().UTC().Format(time.RFC3339)
 	opts.Until = time.Now().UTC().Add(time.Minute * 1).Format(time.RFC3339)
 	if onCallUserList, err := client.ListOnCallUsers(config.PagerDuty.Schedule, opts); err != nil {
-		log.Fatal(err)
+		trace.Wrap(err)
 	} else {
 		for _, p := range onCallUserList {
 			onCallSlackUsername := config.Directory[p.Email].(string)
