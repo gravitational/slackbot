@@ -20,7 +20,6 @@ import (
 	"encoding/json"
 	"os"
 
-	log "github.com/gravitational/logrus"
 	"github.com/gravitational/trace"
 )
 
@@ -107,7 +106,7 @@ func (c *pagerDutyConfig) fromEnv() error {
 func getVarFromEnv(varName string) string {
 	value := os.Getenv(varName)
 	if value == "" {
-		log.Fatal(varName + " ENV variable must be set")
+		Err(varName + " ENV variable must be set\n")
 	}
 	return value
 }
