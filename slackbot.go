@@ -99,6 +99,8 @@ func Default(request slacker.Request, response slacker.ResponseWriter, config *C
 	opts.Since = time.Now().UTC().Format(time.RFC3339)
 	opts.Until = time.Now().UTC().Add(time.Minute * 1).Format(time.RFC3339)
 	if onCallUserList, err := client.ListOnCallUsers(config.PagerDuty.Schedule, opts); err != nil {
+		errText := "There was an error while fetching oncall users, please try again and report the following error" + err.Error()
+		response.Reply(errText)
 		trace.Wrap(err)
 	} else {
 		for _, p := range onCallUserList {
