@@ -13,11 +13,10 @@ RUN set -x && \
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o slackbot .
 
 # RUNTIME
-FROM scratch
+FROM quay.io/gravitational/debian-tall
 
 WORKDIR /bot/
 
-COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=builder /go/src/github.com/gravitational/slackbot/slackbot ./
 
 ENTRYPOINT [ "./slackbot" ]
