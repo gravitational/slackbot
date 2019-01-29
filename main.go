@@ -23,13 +23,13 @@ import (
 )
 
 func main() {
-	var config Config
+	var config config
 	err := config.FromEnv()
 	if err != nil {
 		Err(err.Error())
 	}
 
-	bot := slacker.NewClient(config.Slack.Token)
+	bot := slacker.NewClient(config.slack.token)
 	// defining which function handles the bot Init phase
 	bot.Init(
 		func() {

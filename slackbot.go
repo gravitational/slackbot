@@ -28,16 +28,17 @@ import (
 )
 
 // Init is called upon Bot creation (first startup)
-func Init(config *Config) {
+func Init(config *config) {
 	fmt.Printf("Connected!\n")
-	client := pagerduty.NewClient(config.PagerDuty.APIKey)
+	client := pagerduty.NewClient(config.pagerDuty.aPIKey)
 	var opts pagerduty.GetScheduleOptions
-	if schedule, err := client.GetSchedule(config.PagerDuty.Schedule, opts); err != nil {
+
+	schedule, err := client.GetSchedule(config.pagerDuty.schedule, opts)
+	if err != nil {
 		trace.Wrap(err)
-	} else {
-		fmt.Printf("Configured schedule is \"%s\" with ID: %s\n", schedule.Name,
-			config.PagerDuty.Schedule)
 	}
+	fmt.Printf("Configured schedule is \"%s\" with ID: %s\n", schedule.Name,
+		config.pagerDuty.schedule)
 }
 
 // Err function is used to handle all Error reported by the Bot
@@ -46,22 +47,23 @@ func Err(err string) {
 }
 
 // Emergency is used to open Emergency Incidents on PagerDuty
-func Emergency(request slacker.Request, response slacker.ResponseWriter, config *Config) {
-	client := pagerduty.NewClient(config.PagerDuty.APIKey)
+func Emergency(request slacker.Request, response slacker.ResponseWriter, config *config) {
+	client := pagerduty.NewClient(config.pagerDuty.aPIKey)
 	var scheduleOpts pagerduty.GetScheduleOptions
-	if schedule, err := client.GetSchedule(config.PagerDuty.Schedule, scheduleOpts); err != nil {
+
+	schedule, err := client.GetSchedule(config.pagerDuty.schedule, scheduleOpts)
+	if err != nil {
 		textErr := fmt.Sprintf("Error encountered while fetching schedules: %s", err.Error())
 		response.Reply(textErr)
 		trace.Wrap(err)
-	} else {
-		fmt.Printf(`Opening incident on schedule "%s"/%s`, schedule.Name,
-			config.PagerDuty.Schedule)
 	}
+	fmt.Printf(`Opening incident on schedule "%s"/%s`, schedule.Name,
+		config.pagerDuty.schedule)
 
 	newIncident := pagerduty.CreateIncidentOptions{
 		Type: "incident",
 		Title: fmt.Sprintf("Incident opened by %s, via Slack/@%s",
-			config.CustomerName, config.Slack.BotUsername),
+			config.customerName, config.slack.botUsername),
 	}
 
 	newIncident.Body = pagerduty.APIDetails{
@@ -71,57 +73,62 @@ func Emergency(request slacker.Request, response slacker.ResponseWriter, config 
 
 	newIncident.Service = pagerduty.APIReference{
 		Type: "service_reference",
-		ID:   config.PagerDuty.Service,
+		ID:   config.pagerDuty.service,
 	}
 
 	createIncidentOpts := pagerduty.CreateIncident{
 		Incident: newIncident,
 	}
 
-	if incident, err := client.CreateIncident(config.PagerDuty.FromEmail, &createIncidentOpts); err != nil {
+	incident, err := client.CreateIncident(config.pagerDuty.fromEmail, &createIncidentOpts)
+	if err != nil {
 		errText := "There was an error while creating a new incident created, please try again and report the following error" + err.Error()
 		Err(errText)
 		response.Reply(errText)
-	} else {
-		incidentURL := config.PagerDuty.Link + "/incidents/" + incident.Id
-		fmt.Printf("Incident created by %s via @%s > %s", config.CustomerName,
-			config.Slack.BotUsername, incidentURL)
-		response.Reply("Incident created successfully, " +
-			"please refer to incident " + incidentURL)
-
 	}
+
+	incidentURL := config.pagerDuty.link + "/incidents/" + incident.Id
+	fmt.Printf("Incident created by %s via @%s > %s\n", config.customerName,
+		config.slack.botUsername, incidentURL)
+	response.Reply("Incident created successfully, please refer to incident " + incidentURL)
 }
 
 // Default function handles all messages that won't match the other Commands
-func Default(request slacker.Request, response slacker.ResponseWriter, config *Config) {
-	client := pagerduty.NewClient(config.PagerDuty.APIKey)
+func Default(request slacker.Request, response slacker.ResponseWriter, config *config) {
+	client := pagerduty.NewClient(config.pagerDuty.aPIKey)
 	var opts pagerduty.ListOnCallUsersOptions
 	opts.Since = time.Now().UTC().Format(time.RFC3339)
 	opts.Until = time.Now().UTC().Add(time.Minute * 1).Format(time.RFC3339)
-	if onCallUserList, err := client.ListOnCallUsers(config.PagerDuty.Schedule, opts); err != nil {
+	if onCallUserList, err := client.ListOnCallUsers(config.pagerDuty.schedule, opts); err != nil {
 		errText := "There was an error while fetching oncall users, please try again and report the following error" + err.Error()
 		response.Reply(errText)
 		trace.Wrap(err)
 	} else {
 		for _, p := range onCallUserList {
-			onCallSlackUsername := config.Directory[p.Email].(string)
-			responseText := fmt.Sprintf("<@%s> I think that %s may need some help ASAP! :point_up: :fire: :helmet_with_white_cross:",
-				onCallSlackUsername, config.CustomerName)
-			fmt.Printf("%s requested help via @%s and @%s was pinged via Slack.",
-				config.CustomerName, config.Slack.BotUsername, onCallSlackUsername)
-			response.Reply(responseText)
+			if config.directory[p.Email] != nil {
+				onCallSlackUsername := config.directory[p.Email].(string)
+				responseText := fmt.Sprintf("<@%s> I think that %s may need some help ASAP! :point_up: :fire: :helmet_with_white_cross:",
+					onCallSlackUsername, config.customerName)
+				fmt.Printf("%s requested help via @%s and @%s was pinged via Slack.\n",
+					config.customerName, config.slack.botUsername, onCallSlackUsername)
+				response.Reply(responseText)
+			} else {
+				fmt.Printf("Oncall %s user not found. Please report this error\n", p.Email)
+				textErr := fmt.Sprintf("Oncall user not found. Please report this error")
+				response.Reply(textErr)
+			}
 		}
 	}
 }
 
 // help is used to print the Help message text
-func help(resp slacker.ResponseWriter, c *Config) {
+func help(resp slacker.ResponseWriter, c *config) {
 	help_text := `
 > *SlackBot - HELP*
 >
-> _@` + c.Slack.BotUsername + ` help_ - Prints the help message (if the word help is anywhere in the sentence)
-> _@` + c.Slack.BotUsername + ` open emergency ` + "`<msg>`" + `_ - Open an EMERGENCY incident to Customer Support
-> _@` + c.Slack.BotUsername + ` <anything else>_ - Any other message that will be sent directly to the Bot or mentioning the 
+> _@` + c.slack.botUsername + ` help_ - Prints the help message (if the word help is anywhere in the sentence)
+> _@` + c.slack.botUsername + ` open emergency ` + "`<msg>`" + `_ - Open an EMERGENCY incident to Customer Support
+> _@` + c.slack.botUsername + ` <anything else>_ - Any other message that will be sent directly to the Bot or mentioning the 
 >                                             Bot name in other channels, will result in a ping (mention) to the current 
 >                                             person on call.
 	`

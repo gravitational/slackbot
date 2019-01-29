@@ -23,42 +23,42 @@ import (
 	"github.com/gravitational/trace"
 )
 
-// Config is the configuration structure used everywhere in the code to pass settings and configuration
-type Config struct {
-	CustomerName string
-	Directory    map[string]interface{}
-	Slack        slackConfig
-	PagerDuty    pagerDutyConfig
+// config is the configuration structure used everywhere in the code to pass settings and configuration
+type config struct {
+	customerName string
+	directory    map[string]interface{}
+	slack        slackConfig
+	pagerDuty    pagerDutyConfig
 }
 
 const (
-	CustomerName  = "CUSTOMER_NAME"
-	JSONDirectory = "SLACK_PAGERDUTY_DIRECTORY"
-	Token         = "SLACK_TOKEN"
-	BotUsername   = "SLACK_BOT_USERNAME"
-	Link          = "PAGERDUTY_LINK"
-	APIKey        = "PAGERDUTY_API_KEY"
-	Schedule      = "PAGERDUTY_SUPPORT_SCHEDULE"
-	Service       = "PAGERDUTY_SUPPORT_SERVICE"
-	FromEmail     = "PAGERDUTY_FROM_EMAIL"
+	customerName  = "CUSTOMER_NAME"
+	jSONDirectory = "SLACK_PAGERDUTY_DIRECTORY"
+	token         = "SLACK_TOKEN"
+	botUsername   = "SLACK_BOT_USERNAME"
+	link          = "PAGERDUTY_LINK"
+	aPIKey        = "PAGERDUTY_API_KEY"
+	schedule      = "PAGERDUTY_SUPPORT_SCHEDULE"
+	service       = "PAGERDUTY_SUPPORT_SERVICE"
+	fromEmail     = "PAGERDUTY_FROM_EMAIL"
 )
 
 // FromEnv gathers configuration from the Environment variables and merge them into the Config structure
-func (c *Config) FromEnv() error {
-	c.CustomerName = getVarFromEnv(CustomerName)
+func (c *config) FromEnv() error {
+	c.customerName = getVarFromEnv(customerName)
 
-	JSONDirectory := getVarFromEnv(JSONDirectory)
-	err := json.Unmarshal([]byte(JSONDirectory), &c.Directory)
+	JSONDirectory := getVarFromEnv(jSONDirectory)
+	err := json.Unmarshal([]byte(JSONDirectory), &c.directory)
 	if err != nil {
 		trace.Wrap(err)
 	}
 
-	err = c.Slack.fromEnv()
+	err = c.slack.fromEnv()
 	if err != nil {
 		trace.Wrap(err)
 	}
 
-	err = c.PagerDuty.fromEnv()
+	err = c.pagerDuty.fromEnv()
 	if err != nil {
 		trace.Wrap(err)
 	}
@@ -67,48 +67,48 @@ func (c *Config) FromEnv() error {
 }
 
 type slackConfig struct {
-	Token       string
-	BotUsername string
+	token       string
+	botUsername string
 }
 
 // fromEnv handles the Slack part of the configuration, fetching values from Env variables
 func (c *slackConfig) fromEnv() error {
-	c.Token = getVarFromEnv("SLACK_TOKEN")
+	c.token = getVarFromEnv(token)
 
-	c.BotUsername = getVarFromEnv("SLACK_BOT_USERNAME")
+	c.botUsername = getVarFromEnv(botUsername)
 
 	return nil
 }
 
-// pagerDutyConfig struct is a PagerDuty config
+// pagerDutyconfig struct is a pagerDuty config
 type pagerDutyConfig struct {
-	Link      string
-	APIKey    string
-	Schedule  string
-	Service   string
-	FromEmail string
+	link      string
+	aPIKey    string
+	schedule  string
+	service   string
+	fromEmail string
 }
 
-// fromEnv handles the PagerDuty part of the configuration, fetching values from Env variables
+// fromEnv handles the pagerDuty part of the configuration, fetching values from Env variables
 func (c *pagerDutyConfig) fromEnv() error {
-	c.Link = getVarFromEnv("PAGERDUTY_LINK")
+	c.link = getVarFromEnv(link)
 
-	c.APIKey = getVarFromEnv("PAGERDUTY_API_KEY")
+	c.aPIKey = getVarFromEnv(aPIKey)
 
-	c.Schedule = getVarFromEnv("PAGERDUTY_SUPPORT_SCHEDULE")
+	c.schedule = getVarFromEnv(schedule)
 
-	c.Service = getVarFromEnv("PAGERDUTY_SUPPORT_SERVICE")
+	c.service = getVarFromEnv(service)
 
-	c.FromEmail = getVarFromEnv("PAGERDUTY_FROM_EMAIL")
+	c.fromEmail = getVarFromEnv(fromEmail)
 
 	return nil
 }
 
 // getVarFromEnv is a wrapper function that just gets variable from the Env and return an error if no value is passed
-func getVarFromEnv(varName string) string {
-	value := os.Getenv(varName)
+func getVarFromEnv(name string) string {
+	value := os.Getenv(name)
 	if value == "" {
-		Err(varName + " ENV variable must be set\n")
+		Err(name + " ENV variable must be set\n")
 	}
 	return value
 }
