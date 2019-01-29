@@ -66,17 +66,15 @@ func Emergency(request slacker.Request, response slacker.ResponseWriter, config 
 			config.CustomerName, config.Slack.BotUsername),
 	}
 
-	newIncidentBody := pagerduty.APIDetails{
+	newIncident.Body = pagerduty.APIDetails{
 		Type:    "incident_body",
 		Details: request.Param("msg"),
 	}
-	newIncident.Body = newIncidentBody
 
-	newIncidentService := pagerduty.APIReference{
+	newIncident.Service = pagerduty.APIReference{
 		Type: "service_reference",
 		ID:   config.PagerDuty.Service,
 	}
-	newIncident.Service = newIncidentService
 
 	createIncidentOpts := pagerduty.CreateIncident{
 		Incident: newIncident,
