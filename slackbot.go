@@ -33,8 +33,6 @@ func Init(config *Config) {
 	client := pagerduty.NewClient(config.PagerDuty.APIKey)
 	var opts pagerduty.GetScheduleOptions
 	if schedule, err := client.GetSchedule(config.PagerDuty.Schedule, opts); err != nil {
-		textErr := fmt.Sprintf("Error encountered while fetching schedules: %s", err.Error())
-		response.Reply(textErr)
 		trace.Wrap(err)
 	} else {
 		fmt.Printf("Configured schedule is \"%s\" with ID: %s\n", schedule.Name,
