@@ -139,16 +139,19 @@ func Emergency(request slacker.Request, response slacker.ResponseWriter, config 
 
 	incident, err := client.CreateIncident(config.pagerDuty.fromEmail, &createIncidentOpts)
 	if err != nil {
-		errText := "There was an error while creating a new incident created, please try again and report the following error" + err.Error()
-		Err(errText)
+		errTxt := fmt.Sprintf("There was an error while creating a new incident created, please try again and report the following error", err.Error())
+		Err(errTxt)
 		response.ReportError(err)
 		return
 	}
 
-	incidentURL := config.pagerDuty.link + "/incidents/" + incident.Id
+	incidentURL := fmt.Sprintf("%s/incidents/%s", config.pagerDuty.link,
+		incident.Id)
 	fmt.Printf("Incident created by %s via @%s > %s\n", config.customerName,
 		config.slack.botUsername, incidentURL)
-	response.Reply("Incident created successfully, please refer to incident " + incidentURL)
+	responseTxt := fmt.Sprintf("Incident created successfully, please refer to incident %s",
+		incidentURL)
+	response.Reply(responseTxt)
 }
 
 // Default function handles all messages that won't match the other Commands
@@ -162,8 +165,8 @@ func Default(request slacker.Request, response slacker.ResponseWriter, config *c
 
 	onCallUserList, err := client.ListOnCallUsers(config.pagerDuty.schedule, opts)
 	if err != nil {
-		errText := "There was an error while fetching oncall users, please try again and report the following error" + err.Error()
-		Err(errText)
+		errTxt := fmt.Sprintf("There was an error while fetching oncall users, please try again and report the following error %s", err.Error())
+		Err(errTxt)
 		response.ReportError(err)
 		return
 	}
@@ -177,11 +180,11 @@ func Default(request slacker.Request, response slacker.ResponseWriter, config *c
 		}
 
 		onCallSlackUsername := config.directory[p.Email].(string)
-		responseText := fmt.Sprintf("<@%s> I think that %s may need some help ASAP! :point_up: :fire: :helmet_with_white_cross:",
+		responseTxt := fmt.Sprintf("<@%s> I think that %s may need some help ASAP! :point_up: :fire: :helmet_with_white_cross:",
 			onCallSlackUsername, config.customerName)
 		fmt.Printf("%s requested help via @%s and @%s was pinged via Slack.\n",
 			config.customerName, config.slack.botUsername, onCallSlackUsername)
-		response.Reply(responseText)
+		response.Reply(responseTxt)
 	}
 }
 
