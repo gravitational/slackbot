@@ -7,7 +7,7 @@ some basic self-service and oncall Support features to Customers.
 
 ## Settings
 
-In order to do so a few basic requirements needs to be setup and configured via environment variables:
+In order to do so a few basic requirements need to be setup and configured via environment variables:
 
 | Variable Name | Description | Example |
 |---------------|-------------|---------|
@@ -25,7 +25,7 @@ In order to do so a few basic requirements needs to be setup and configured via 
 ## Running slackbot Locally
 
 You can test your `slackbot` by running the following, however all [environment variables](#Settings)
-must be set correctly before it will work.
+must be set correctly for it to work.
 
 You can build and run the bot locally by running:
 
@@ -51,9 +51,8 @@ and specify them through the appropriate settings.
 
 ### Through a Deployment
 
-Once you have your Bot tested and working, we suggest you running it in 
-Kubernetes in production.<br>
-In order to do so you can use the Deployment we offer as an example:
+Once you're confident your Bot works, you can run in your Kubernetes production environment.<br>
+See the bundled Deployment (slackbot_deploy.yaml) as an example.
 
     kubectl apply -f slackbot_deploy.yml
 
