@@ -61,17 +61,17 @@ func (c *config) FromEnv() error {
 	JSONDirectory := getVarFromEnv(jSONDirectory)
 	err := json.Unmarshal([]byte(JSONDirectory), &c.directory)
 	if err != nil {
-		trace.Wrap(err)
+		return trace.Wrap(err)
 	}
 
 	err = c.slack.fromEnv()
 	if err != nil {
-		trace.Wrap(err)
+		return trace.Wrap(err)
 	}
 
 	err = c.pagerDuty.fromEnv()
 	if err != nil {
-		trace.Wrap(err)
+		return trace.Wrap(err)
 	}
 
 	return nil

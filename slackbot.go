@@ -34,14 +34,14 @@ func Start(config *config) error {
 	// defining which function handles the bot Init phase
 	bot.Init(
 		func() {
-			Init(config)
+			if err := Init(config); err != nil {
+				Err(err.Error())
+				return trace.Wrap(err)
+			}
 		})
 
 	// error raised by the Bot will be handled by this function
-	bot.Err(
-		func(err string) {
-			Err(err)
-		})
+	bot.Err(Err)
 
 	// function tied to sentences sent to the Bot and starting with "open emergency" followed by some text
 	emergencyCmdDefinition := &slacker.CommandDefinition{
@@ -55,7 +55,10 @@ func Start(config *config) error {
 	// when no other "Command" matches and text is sent to the Bot, this function will be run instead
 	bot.DefaultCommand(
 		func(request slacker.Request, response slacker.ResponseWriter) {
-			Default(request, response, config)
+			if err := Default(request, response, config); err != nil {
+				Err(err.Error())
+				return trace.Wrap(err)
+			}
 		})
 
 	// function run for all events received by the bot (including time ticks)
@@ -79,6 +82,7 @@ func Start(config *config) error {
 	err := bot.Listen(ctx)
 	if err != nil {
 		Err(err.Error())
+		return trace.Wrap(err)
 	}
 
 	return nil
