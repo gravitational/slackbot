@@ -35,8 +35,9 @@
   version = "1.1.5"
 
 [[constraint]]
-  branch = "master"
   name = "github.com/shomali11/slacker"
+  # slacker doesn't use tagged release, using a revision instead
+  revision = "37d2f0fd93e4c63a1afaba092dc5bb548620fcb3"
 
 [prune]
   go-tests = true

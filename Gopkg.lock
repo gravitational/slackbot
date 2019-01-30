@@ -84,7 +84,6 @@
   revision = "233a9a872c306ae145fed0a7d71afc128ad78394"
 
 [[projects]]
-  branch = "master"
   digest = "1:4511236a52a95c989e1f358c6fbf384139510d6a51f51f6e77f4ff88684416c8"
   name = "github.com/shomali11/slacker"
   packages = ["."]
