@@ -16,17 +16,21 @@ limitations under the License.
 
 package main
 
+import (
+	"os"
+)
+
 func main() {
 	var config config
 	err := config.FromEnv()
 	if err != nil {
 		Err(err.Error())
-		os.ExitCode(1)
+		os.Exit(1)
 	}
 
 	err = Start(&config)
 	if err != nil {
 		Err(err.Error())
-		os.ExitCode(1)
+		os.Exit(1)
 	}
 }

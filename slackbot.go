@@ -85,17 +85,19 @@ func Start(config *config) error {
 }
 
 // Init is called upon Bot creation (first startup)
-func Init(config *config) {
+func Init(config *config) error {
 	fmt.Printf("Connected!\n")
 	client := pagerduty.NewClient(config.pagerDuty.aPIKey)
 	var opts pagerduty.GetScheduleOptions
 
 	schedule, err := client.GetSchedule(config.pagerDuty.schedule, opts)
 	if err != nil {
-		trace.Wrap(err)
+		return trace.Wrap(err)
 	}
 	fmt.Printf("Configured schedule is \"%s\" with ID: %s\n", schedule.Name,
 		config.pagerDuty.schedule)
+
+	return nil
 }
 
 // Err function is used to handle all Error reported by the Bot
@@ -104,7 +106,7 @@ func Err(err string) {
 }
 
 // Emergency is used to open Emergency Incidents on PagerDuty
-func Emergency(request slacker.Request, response slacker.ResponseWriter, config *config) {
+func Emergency(request slacker.Request, response slacker.ResponseWriter, config *config) error {
 	client := pagerduty.NewClient(config.pagerDuty.aPIKey)
 	var scheduleOpts pagerduty.GetScheduleOptions
 
@@ -112,7 +114,7 @@ func Emergency(request slacker.Request, response slacker.ResponseWriter, config 
 	if err != nil {
 		textErr := fmt.Sprintf("Error encountered while fetching schedules: %s", err.Error())
 		response.Reply(textErr)
-		trace.Wrap(err)
+		return trace.Wrap(err)
 	}
 	fmt.Printf("Opening incident on schedule \"%s\"/%s\n", schedule.Name,
 		config.pagerDuty.schedule)
@@ -142,7 +144,7 @@ func Emergency(request slacker.Request, response slacker.ResponseWriter, config 
 		errTxt := fmt.Sprintf("There was an error while creating a new incident created, please try again and report the following error", err.Error())
 		Err(errTxt)
 		response.ReportError(err)
-		return
+		return trace.Wrap(err)
 	}
 
 	incidentURL := fmt.Sprintf("%s/incidents/%s", config.pagerDuty.link,
@@ -152,10 +154,12 @@ func Emergency(request slacker.Request, response slacker.ResponseWriter, config 
 	responseTxt := fmt.Sprintf("Incident created successfully, please refer to incident %s",
 		incidentURL)
 	response.Reply(responseTxt)
+
+	return nil
 }
 
 // Default function handles all messages that won't match the other Commands
-func Default(request slacker.Request, response slacker.ResponseWriter, config *config) {
+func Default(request slacker.Request, response slacker.ResponseWriter, config *config) error {
 	client := pagerduty.NewClient(config.pagerDuty.aPIKey)
 	var opts pagerduty.ListOnCallUsersOptions
 
@@ -168,7 +172,7 @@ func Default(request slacker.Request, response slacker.ResponseWriter, config *c
 		errTxt := fmt.Sprintf("There was an error while fetching oncall users, please try again and report the following error %s", err.Error())
 		Err(errTxt)
 		response.ReportError(err)
-		return
+		return err
 	}
 
 	for _, p := range onCallUserList {
@@ -186,6 +190,8 @@ func Default(request slacker.Request, response slacker.ResponseWriter, config *c
 			config.customerName, config.slack.botUsername, onCallSlackUsername)
 		response.Reply(responseTxt)
 	}
+
+	return nil
 }
 
 // help is used to print the Help message text
