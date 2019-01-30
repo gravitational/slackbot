@@ -36,7 +36,7 @@ func Start(config *config) error {
 		func() {
 			if err := Init(config); err != nil {
 				Err(err.Error())
-				return trace.Wrap(err)
+				return
 			}
 		})
 
@@ -47,7 +47,10 @@ func Start(config *config) error {
 	emergencyCmdDefinition := &slacker.CommandDefinition{
 		Description: "Open an EMERGENCY incident to Customer Support",
 		Handler: func(request slacker.Request, response slacker.ResponseWriter) {
-			Emergency(request, response, config)
+			if err := Emergency(request, response, config); err != nil {
+				Err(err.Error())
+				return
+			}
 		},
 	}
 	bot.Command("open emergency <msg>", emergencyCmdDefinition)
@@ -57,7 +60,7 @@ func Start(config *config) error {
 		func(request slacker.Request, response slacker.ResponseWriter) {
 			if err := Default(request, response, config); err != nil {
 				Err(err.Error())
-				return trace.Wrap(err)
+				return
 			}
 		})
 
