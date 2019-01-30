@@ -21,10 +21,12 @@ func main() {
 	err := config.FromEnv()
 	if err != nil {
 		Err(err.Error())
+		os.ExitCode(1)
 	}
 
 	err = Start(&config)
 	if err != nil {
 		Err(err.Error())
+		os.ExitCode(1)
 	}
 }
