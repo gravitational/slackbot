@@ -163,8 +163,8 @@ func Default(request slacker.Request, response slacker.ResponseWriter, config *c
 	onCallUserList, err := client.ListOnCallUsers(config.pagerDuty.schedule, opts)
 	if err != nil {
 		errText := "There was an error while fetching oncall users, please try again and report the following error" + err.Error()
-		response.Reply(errText)
-		trace.Wrap(err)
+		Err(errText)
+		response.ReportError(err)
 		return
 	}
 
