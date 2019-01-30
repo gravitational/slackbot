@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Gravitational, Inc.
+Copyright 2019 Gravitational, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -138,6 +138,7 @@ func Emergency(request slacker.Request, response slacker.ResponseWriter, config 
 		errText := "There was an error while creating a new incident created, please try again and report the following error" + err.Error()
 		Err(errText)
 		response.Reply(errText)
+		return
 	}
 
 	incidentURL := config.pagerDuty.link + "/incidents/" + incident.Id
@@ -150,27 +151,33 @@ func Emergency(request slacker.Request, response slacker.ResponseWriter, config 
 func Default(request slacker.Request, response slacker.ResponseWriter, config *config) {
 	client := pagerduty.NewClient(config.pagerDuty.aPIKey)
 	var opts pagerduty.ListOnCallUsersOptions
-	opts.Since = time.Now().UTC().Format(time.RFC3339)
-	opts.Until = time.Now().UTC().Add(time.Minute * 1).Format(time.RFC3339)
-	if onCallUserList, err := client.ListOnCallUsers(config.pagerDuty.schedule, opts); err != nil {
+
+	now := time.Now().UTC()
+	opts.Since = now.Format(time.RFC3339)
+	opts.Until = now.Add(time.Minute * 1).Format(time.RFC3339)
+
+	onCallUserList, err := client.ListOnCallUsers(config.pagerDuty.schedule, opts)
+	if err != nil {
 		errText := "There was an error while fetching oncall users, please try again and report the following error" + err.Error()
 		response.Reply(errText)
 		trace.Wrap(err)
-	} else {
-		for _, p := range onCallUserList {
-			if config.directory[p.Email] != nil {
-				onCallSlackUsername := config.directory[p.Email].(string)
-				responseText := fmt.Sprintf("<@%s> I think that %s may need some help ASAP! :point_up: :fire: :helmet_with_white_cross:",
-					onCallSlackUsername, config.customerName)
-				fmt.Printf("%s requested help via @%s and @%s was pinged via Slack.\n",
-					config.customerName, config.slack.botUsername, onCallSlackUsername)
-				response.Reply(responseText)
-			} else {
-				fmt.Printf("Oncall %s user not found. Please report this error\n", p.Email)
-				textErr := fmt.Sprintf("Oncall user not found. Please report this error")
-				response.Reply(textErr)
-			}
+		return
+	}
+
+	for _, p := range onCallUserList {
+		if config.directory[p.Email] == nil {
+			fmt.Printf("Oncall %s user not found. Please report this error\n", p.Email)
+			textErr := fmt.Sprintf("Oncall user not found. Please report this error")
+			response.Reply(textErr)
+			continue
 		}
+
+		onCallSlackUsername := config.directory[p.Email].(string)
+		responseText := fmt.Sprintf("<@%s> I think that %s may need some help ASAP! :point_up: :fire: :helmet_with_white_cross:",
+			onCallSlackUsername, config.customerName)
+		fmt.Printf("%s requested help via @%s and @%s was pinged via Slack.\n",
+			config.customerName, config.slack.botUsername, onCallSlackUsername)
+		response.Reply(responseText)
 	}
 }
 
