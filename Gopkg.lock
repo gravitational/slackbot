@@ -2,12 +2,12 @@
 
 
 [[projects]]
-  digest = "1:3bb331d3045ee55402a226f6ab0f005cbc09527df714278c3925d4700db79260"
+  branch = "master"
+  digest = "1:de4eb123b15ad1a4b72b1ee2f84c42bec40332e25de9eaafd6d8d25bca777744"
   name = "github.com/PagerDuty/go-pagerduty"
   packages = ["."]
   pruneopts = "UT"
-  revision = "b4a4067bdbde86de1d3fdf15c3c01e76bee9127c"
-  version = "1.0.4"
+  revision = "fe8f9c4593d05f029afeb2c08c3e220120306506"
 
 [[projects]]
   digest = "1:a63cff6b5d8b95638bfe300385d93b2a6d9d687734b863da8e09dc834510a690"

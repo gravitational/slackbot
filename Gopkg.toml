@@ -27,7 +27,7 @@
 
 [[constraint]]
   name = "github.com/PagerDuty/go-pagerduty"
-  version = "1.0.4"
+  branch = "master"
 
 [[constraint]]
   name = "github.com/gravitational/trace"
