@@ -114,7 +114,7 @@ func Emergency(request slacker.Request, response slacker.ResponseWriter, config 
 		response.Reply(textErr)
 		trace.Wrap(err)
 	}
-	fmt.Printf(`Opening incident on schedule "%s"/%s`, schedule.Name,
+	fmt.Printf("Opening incident on schedule \"%s\"/%s\n", schedule.Name,
 		config.pagerDuty.schedule)
 
 	newIncident := pagerduty.CreateIncidentOptions{
