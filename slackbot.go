@@ -141,7 +141,7 @@ func Emergency(request slacker.Request, response slacker.ResponseWriter, config 
 	if err != nil {
 		errText := "There was an error while creating a new incident created, please try again and report the following error" + err.Error()
 		Err(errText)
-		response.Reply(errText)
+		response.ReportError(err)
 		return
 	}
 
