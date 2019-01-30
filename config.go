@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Gravitational, Inc.
+Copyright 2019 Gravitational, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,15 +32,26 @@ type config struct {
 }
 
 const (
-	customerName  = "CUSTOMER_NAME"
+	botName        = "slackbot"
+	botDescription = "Slack to PagerDuty Self Support Bot"
+
+	customerName = "CUSTOMER_NAME"
+
 	jSONDirectory = "SLACK_PAGERDUTY_DIRECTORY"
-	token         = "SLACK_TOKEN"
-	botUsername   = "SLACK_BOT_USERNAME"
-	link          = "PAGERDUTY_LINK"
-	aPIKey        = "PAGERDUTY_API_KEY"
-	schedule      = "PAGERDUTY_SUPPORT_SCHEDULE"
-	service       = "PAGERDUTY_SUPPORT_SERVICE"
-	fromEmail     = "PAGERDUTY_FROM_EMAIL"
+
+	token = "SLACK_TOKEN"
+
+	botUsername = "SLACK_BOT_USERNAME"
+
+	link = "PAGERDUTY_LINK"
+
+	aPIKey = "PAGERDUTY_API_KEY"
+
+	schedule = "PAGERDUTY_SUPPORT_SCHEDULE"
+
+	service = "PAGERDUTY_SUPPORT_SERVICE"
+
+	fromEmail = "PAGERDUTY_FROM_EMAIL"
 )
 
 // FromEnv gathers configuration from the Environment variables and merge them into the Config structure
