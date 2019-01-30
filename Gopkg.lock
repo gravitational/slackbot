@@ -2,7 +2,6 @@
 
 
 [[projects]]
-  branch = "master"
   digest = "1:de4eb123b15ad1a4b72b1ee2f84c42bec40332e25de9eaafd6d8d25bca777744"
   name = "github.com/PagerDuty/go-pagerduty"
   packages = ["."]

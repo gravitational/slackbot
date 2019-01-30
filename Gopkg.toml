@@ -27,7 +27,8 @@
 
 [[constraint]]
   name = "github.com/PagerDuty/go-pagerduty"
-  branch = "master"
+  # while waiting for next release, using latest working master branch revision
+  revision = "fe8f9c4593d05f029afeb2c08c3e220120306506"
 
 [[constraint]]
   name = "github.com/gravitational/trace"
