@@ -2,12 +2,12 @@
 
 
 [[projects]]
-  branch = "master"
-  digest = "1:de4eb123b15ad1a4b72b1ee2f84c42bec40332e25de9eaafd6d8d25bca777744"
+  digest = "1:3bb331d3045ee55402a226f6ab0f005cbc09527df714278c3925d4700db79260"
   name = "github.com/PagerDuty/go-pagerduty"
   packages = ["."]
   pruneopts = "UT"
-  revision = "fe8f9c4593d05f029afeb2c08c3e220120306506"
+  revision = "b4a4067bdbde86de1d3fdf15c3c01e76bee9127c"
+  version = "1.0.4"
 
 [[projects]]
   digest = "1:a63cff6b5d8b95638bfe300385d93b2a6d9d687734b863da8e09dc834510a690"
@@ -26,12 +26,28 @@
   version = "v1.4.0"
 
 [[projects]]
-  digest = "1:adec6c13b942561150e8fbecffd9e4c342ccbac59385bd0ddf69d9a6d0699f22"
-  name = "github.com/gravitational/logrus"
+  digest = "1:89dfd879adc40793de2e59f4f7c42c1b4ad6bdab32fcb5d6b769c1fcc6fc452a"
+  name = "github.com/gravitational/trace"
   packages = ["."]
   pruneopts = "UT"
-  revision = "dcdb95d728dbb6fe4b9fbe6b3b9d1fb268e68036"
-  version = "1.0.6"
+  revision = "3318e711adee0b3f48d3399ebf5aaddf329a2b4f"
+  version = "1.1.5"
+
+[[projects]]
+  digest = "1:75ab90ae3f5d876167e60f493beadfe66f0ed861a710f283fb06c86437a09538"
+  name = "github.com/jonboulle/clockwork"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "2eee05ed794112d45db504eb05aa693efd2b8b09"
+  version = "v0.1.0"
+
+[[projects]]
+  digest = "1:0a69a1c0db3591fcefb47f115b224592c8dfa4368b7ba9fae509d5e16cdc95c8"
+  name = "github.com/konsorten/go-windows-terminal-sequences"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "5c8c8bd35d3832f5d134ae1e1e375b69a4d25242"
+  version = "v1.0.1"
 
 [[projects]]
   branch = "master"
@@ -70,37 +86,53 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:6ff62af664710540ef99389508d8d13a1d5b831364305e96296819f1a0d57953"
+  digest = "1:4511236a52a95c989e1f358c6fbf384139510d6a51f51f6e77f4ff88684416c8"
   name = "github.com/shomali11/slacker"
   packages = ["."]
   pruneopts = "UT"
-  revision = "3ebf5c3cb940956eba4e95e001e76b16c0e9bfab"
+  revision = "37d2f0fd93e4c63a1afaba092dc5bb548620fcb3"
+
+[[projects]]
+  digest = "1:87c2e02fb01c27060ccc5ba7c5a407cc91147726f8f40b70cceeedbc52b1f3a8"
+  name = "github.com/sirupsen/logrus"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "e1e72e9de974bd926e5c56f83753fba2df402ce5"
+  version = "v1.3.0"
 
 [[projects]]
   branch = "master"
-  digest = "1:38f553aff0273ad6f367cb0a0f8b6eecbaef8dc6cb8b50e57b6a81c1d5b1e332"
+  digest = "1:fde12c4da6237363bf36b81b59aa36a43d28061167ec4acb0d41fc49464e28b9"
   name = "golang.org/x/crypto"
   packages = ["ssh/terminal"]
   pruneopts = "UT"
-  revision = "057139ce5d2bdbe6fe73c53679e24e9cf007f637"
+  revision = "b01c7a72566457eb1420261cdafef86638fc3861"
 
 [[projects]]
   branch = "master"
-  digest = "1:bb644db32f5bc1e327a0f748ec871edc4dc46f19b4fbbc15bfd95b1460646537"
+  digest = "1:76ee51c3f468493aff39dbacc401e8831fbb765104cbf613b89bef01cf4bad70"
+  name = "golang.org/x/net"
+  packages = ["context"]
+  pruneopts = "UT"
+  revision = "d26f9f9a57f3fab6a695bec0d84433c2c50f8bbf"
+
+[[projects]]
+  branch = "master"
+  digest = "1:7941e2f16c0833b438cbef7fccfe4f8346f9f7876b42b29717a75d7e8c4800cb"
   name = "golang.org/x/sys"
   packages = [
     "unix",
     "windows",
   ]
   pruneopts = "UT"
-  revision = "c6b37f3e92850b723493d63fd35aad34e19e048d"
+  revision = "aca44879d5644da7c5b8ec6a1115e9b6ea6c40d9"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
     "github.com/PagerDuty/go-pagerduty",
-    "github.com/gravitational/logrus",
+    "github.com/gravitational/trace",
     "github.com/shomali11/slacker",
   ]
   solver-name = "gps-cdcl"

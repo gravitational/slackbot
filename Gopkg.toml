@@ -27,11 +27,11 @@
 
 [[constraint]]
   name = "github.com/PagerDuty/go-pagerduty"
-  branch = "master"
+  version = "1.0.4"
 
 [[constraint]]
-  name = "github.com/gravitational/logrus"
-  version = "1.0.6"
+  name = "github.com/gravitational/trace"
+  version = "1.1.5"
 
 [[constraint]]
   branch = "master"
