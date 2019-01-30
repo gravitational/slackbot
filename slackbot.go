@@ -44,11 +44,13 @@ func Start(config *config) error {
 		})
 
 	// function tied to sentences sent to the Bot and starting with "open emergency" followed by some text
-	bot.Command("open emergency <msg>",
-		"Open an EMERGENCY incident to Customer Support",
-		func(request slacker.Request, response slacker.ResponseWriter) {
+	emergencyCmdDefinition := &slacker.CommandDefinition{
+		Description: "Open an EMERGENCY incident to Customer Support",
+		Handler: func(request slacker.Request, response slacker.ResponseWriter) {
 			Emergency(request, response, config)
-		})
+		},
+	}
+	bot.Command("open emergency <msg>", emergencyCmdDefinition)
 
 	// when no other "Command" matches and text is sent to the Bot, this function will be run instead
 	bot.DefaultCommand(
@@ -63,11 +65,13 @@ func Start(config *config) error {
 		})
 
 	// set the "help" message handling function
-	bot.Help("help",
-		slacker.WithHandler(
-			func(request slacker.Request, response slacker.ResponseWriter) {
-				help(response, config)
-			}))
+	helpCmdDefinition := &slacker.CommandDefinition{
+		Description: "Help function",
+		Handler: func(request slacker.Request, response slacker.ResponseWriter) {
+			help(response, config)
+		},
+	}
+	bot.Help(helpCmdDefinition)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
