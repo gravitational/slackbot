@@ -141,7 +141,7 @@ func Emergency(request slacker.Request, response slacker.ResponseWriter, config 
 
 	incident, err := client.CreateIncident(config.pagerDuty.fromEmail, &createIncidentOpts)
 	if err != nil {
-		errTxt := fmt.Sprintf("There was an error while creating a new incident created, please try again and report the following error", err.Error())
+		errTxt := fmt.Sprintf("There was an error while creating a new incident, please try again and report the following error: %v", err)
 		Err(errTxt)
 		response.ReportError(err)
 		return trace.Wrap(err)
