@@ -90,7 +90,7 @@ metadata:
     app: slackbot
 type: Opaque
 stringData:
-  CUSTOMER_NAME: "Awesome Customer Brand"
+  CUSTOMER_NAME: "Customer Name Example"
   SLACK_PAGERDUTY_DIRECTORY: '{ "oncalluser1@example.email" : "slack_username1", "oncalluser2@example.email" : "slack_username2" }'
   SLACK_TOKEN: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
   SLACK_BOT_USERNAME: "customersupportbot"
