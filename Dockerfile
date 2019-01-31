@@ -1,13 +1,22 @@
-FROM alpine
+# BUILDER
 
-RUN apk update
+FROM golang:1.11 AS builder
+RUN go version
 
-RUN apk add nodejs npm git
+COPY  . /go/src/github.com/gravitational/slackbot
+WORKDIR /go/src/github.com/gravitational/slackbot
 
-ADD . /bot
+RUN set -x && \
+    go get github.com/golang/dep/cmd/dep && \
+    dep ensure -v
 
-RUN rm -rf /bot/.git
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o slackbot .
 
-WORKDIR /bot
+# RUNTIME
+FROM quay.io/gravitational/debian-tall
 
-ENTRYPOINT ["bin/hubot","-a","slack"]
+WORKDIR /bot/
+
+COPY --from=builder /go/src/github.com/gravitational/slackbot/slackbot ./
+
+ENTRYPOINT [ "./slackbot" ]
