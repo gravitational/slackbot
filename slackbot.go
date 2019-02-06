@@ -191,7 +191,7 @@ func Default(request slacker.Request, response slacker.ResponseWriter, config *c
 		}
 
 		onCallSlackUsername := config.directory[p.Email].(string)
-		responseTxt := fmt.Sprintf("<@%s> I think that %s may need some help ASAP! :point_up: :fire: :helmet_with_white_cross:",
+		responseTxt := fmt.Sprintf("<@%s> could you please take a look? :point_up:",
 			onCallSlackUsername, config.customerName)
 		fmt.Printf("%s requested help via @%s and @%s was pinged via Slack.\n",
 			config.customerName, config.slack.botUsername, onCallSlackUsername)
