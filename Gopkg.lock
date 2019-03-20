@@ -84,11 +84,11 @@
   revision = "233a9a872c306ae145fed0a7d71afc128ad78394"
 
 [[projects]]
-  digest = "1:a075d5555b800a2b22dd0692a9308eb0b71c658c5a88294864ce8491df07d3cf"
+  digest = "1:5469186225ecf56316a7271a12cebd589d0d55ec19fc1836824dcef5e3ce45a5"
   name = "github.com/shomali11/slacker"
   packages = ["."]
   pruneopts = "UT"
-  revision = "0d86a8f2f8f4cd263d58d9e35c96516013685ed6"
+  revision = "a5d038030ebb3da214688d4245a6404b24d9236f"
 
 [[projects]]
   digest = "1:87c2e02fb01c27060ccc5ba7c5a407cc91147726f8f40b70cceeedbc52b1f3a8"

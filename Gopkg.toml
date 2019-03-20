@@ -37,7 +37,7 @@
 [[constraint]]
   name = "github.com/shomali11/slacker"
   # slacker doesn't use tagged release, using a revision instead
-  revision = "0d86a8f2f8f4cd263d58d9e35c96516013685ed6"
+  revision = "a5d038030ebb3da214688d4245a6404b24d9236f"
 
 [prune]
   go-tests = true
